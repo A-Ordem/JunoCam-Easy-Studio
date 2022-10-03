@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JunoCam Easy Studio</title>
+    <link rel="stylesheet" href="./style.css"/>
+  </head>
+  <body>
+    <main>
+      <div id="input-processing-container">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+        <script src="main.js"></script>
+        <script src="operations.js"></script>
+
+        <div id="input-container">
+          <div id="input-title">
+            <img src="images/download-icon.png" alt="download-icon" width="30px">
+            Upload a JunoCam zip file
+          </div>
+
+          <hr style="height:2px;border-width:0;color:white;background-color:white;margin-top: 4px;">
+          
+          <div id="input-btn-wrapper">
+            Choose your file: <br/>
+            <div id="input-btn-container">
+              <button onclick="document.querySelector('#input-btn').click()">Load file</button>
+              <button onclick="window.open('https://www.missionjuno.swri.edu/junocam/processing?source=junocam', '_blank')">JunoCam Gallery</button>
+            </div>
+          </div>
+          
+          <div id="examples-dropdown-wrapper">
+            Or load an example: <br/>
+          </div>
+
+        </div>
+
+        <div id="image-processing-text">
+          <p>Image Processing</p>
+        </div>
+
+        <div id="image-processing-container">
+
+          <div id="brightness-slider-container" class="slider-container">
+            <img src="images/brightness-icon.png" alt="icon" width="30px">
+          </div>
+          
+          <div id="contrast-slider-container" class="slider-container">
+            <img src="images/contrast-icon.png" alt="icon" width="30px">
+          </div>
+          
+          <div id="R-slider-container" class="slider-container">
+            <img src="images/rgb-icon.png" alt="icon" width="30px">
+            R
+          </div>
+          
+          <div id="G-slider-container" class="slider-container">
+            <img src="images/rgb-icon.png" alt="icon" width="30px">
+            G
+          </div>
+          
+          <div id="B-slider-container" class="slider-container">
+            <img src="images/rgb-icon.png" alt="icon" width="30px">
+            B
+          </div>
+
+          <div id="hue-slider-container" class="slider-container">
+            <img src="images/hue-icon.png" alt="icon" width="30px">
+          </div>
+
+          <div id="saturation-slider-container" class="slider-container">
+            <img src="images/saturation-icon.png" alt="icon" width="30px">
+          </div>
+
+        </div>
+
+      </div>
+      
+      <div id="raw-download-container">
+        <div id="raw-download-title">
+          <p>Raw Image</p>
+        </div>
+        <div id="raw-download-image">
+          
+        </div>
+
+        <button id="download-btn" onclick="downloadResult()" disabled>
+          Download And Share!
+        </button>
+      </div>
+
+      <div id="generate-RGB-container">
+        <img src="./images/Jupinha.png" width="80%" height="80%"/>
+        <button onclick="generateRGBImages()" disabled id="generateRGBImages-button">Generate RGB Images</button>
+      </div>
+
+    </main>
+  </body>
+</html>
