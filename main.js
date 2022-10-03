@@ -1,3 +1,4 @@
+
 let sourceR
 let sourceG
 let sourceB
@@ -37,6 +38,41 @@ let satuSliderP;
 
 let selectedFile
 let entries
+
+let sR1
+let sG1
+let sB1
+let sRAW1
+
+let sR2
+let sG2
+let sB2
+let sRAW2
+
+let sR3
+let sG3
+let sB3
+let sRAW3
+
+function preload() {
+    sR1 = loadImage("./images/examples/1r.png")
+    sG1 = loadImage("./images/examples/1g.png")
+    sB1 = loadImage("./images/examples/1b.png")
+    sRAW1 = createImg("./images/examples/1raw.png")
+    sRAW1.hide()
+    
+    sR2 = loadImage("./images/examples/2r.png")
+    sG2 = loadImage("./images/examples/2g.png")
+    sB2 = loadImage("./images/examples/2b.png")
+    sRAW2 = createImg("./images/examples/2raw.png")
+    sRAW2.hide()
+
+    sR3 = loadImage("./images/examples/3r.png")
+    sG3 = loadImage("./images/examples/3g.png")
+    sB3 = loadImage("./images/examples/3b.png")
+    sRAW3 = createImg("./images/examples/3raw.png")
+    sRAW3.hide()
+}
 
 const model = (() => {
 
@@ -83,10 +119,10 @@ function setup() {
     
     sel = createSelect();
     sel.id("dropdown-examples")
-    sel.option('13913-ImageSet');
-    sel.option('13913-ImageSet');
-    sel.option('13913-ImageSet');
-    sel.selected('kiwi');
+    sel.option('Select');
+    sel.option('7951-imageSet');
+    sel.option('12633-imageSet');
+    sel.option('13630-imageSet');
     sel.changed(handleExample);
 	fragment.appendChild(document.querySelector('#dropdown-examples'))
 	document.querySelector('#examples-dropdown-wrapper').appendChild(fragment)
@@ -168,8 +204,6 @@ function setup() {
     satuSliderP.class("slider-p")
 	fragment.appendChild(document.querySelector('#saturation-slider-p'))
 	document.querySelector('#saturation-slider-container').appendChild(fragment)
-    
-
 }
 
 function draw() {
@@ -328,7 +362,37 @@ function copyImage(img) {
 }
 
 function handleExample() {
+    nome = sel.value() 
 
+    if(sourceR) return
+    
+    if(nome == "7951-imageSet") {
+        sourceR = sR1
+        sourceG = sG1
+        sourceB = sB1
+        sourceRAW = sRAW1
+    }
+    if(nome == "12633-imageSet") {
+        sourceR = sR2
+        sourceG = sG2
+        sourceB = sB2
+        sourceRAW = sRAW2
+    }
+    if(nome == "13630-imageSet") {
+        sourceR = sR3
+        sourceG = sG3
+        sourceB = sB3
+        sourceRAW = sRAW3
+    }
+    
+    if(sourceRAW) {
+        sourceRAW.show()
+        sourceRAW.id("img-raw")
+        var fragment = document.createDocumentFragment()
+        fragment.appendChild(document.querySelector('#img-raw'))
+        document.querySelector('#raw-download-image').appendChild(fragment)
+    }
+    
 }
 
 function generateRGBImages() {
