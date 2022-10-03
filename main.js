@@ -35,23 +35,21 @@ let blueSliderP;
 let hueSliderP;
 let satuSliderP;
 
-/* Analise para o raw:
+let selectedFile
+let entries
 
-altura de uma faixa -> sempre 128?
+const model = (() => {
 
-Dimensões dos raws:
-1: 1648 x 6144
-2: 1648 x 14592
-3: 1648 x 5376
-4: 1648 x 9984
+    return {
+        getEntries(file, options) {
+            return (new zip.ZipReader(new zip.BlobReader(file))).getEntries(options)
+        },
+        async getURL(entry, options) {
+            return URL.createObjectURL(await entry.getData(new zip.BlobWriter(), options))
+        }
+    }
 
-Altura de cada canal:
-1: altura/3 -> 2048 != 1648 -> n_fatias = 16
-2: altura/3 -> 4864 != 1648 -> n_fatias = 38
-3: altura/3 -> 1792 != 1648 -> n_fatias = 14
-4: altura/3 -> 3328 != 1648 -> n_fatias = 26
-
-*/
+})()
 
 function setup() {
     createCanvas(677, 677)
@@ -63,7 +61,24 @@ function setup() {
 	fragment.appendChild(document.querySelector('#input-btn'))
 	document.querySelector('#input-btn-container').appendChild(fragment)
 
-    // document.querySelector('#input-btn').setAttribute("accept", ".zip,.rar,.7zip")
+    const fileInput = document.querySelector('#input-btn')
+    fileInput.onchange = selectFile
+
+    async function selectFile() {
+        try {
+            selectedFile = fileInput.files[0]
+            await loadFiles()
+        } catch (error) {
+            alert(error)
+        }
+    }
+
+    async function loadFiles(filenameEncoding) {
+        entries = await model.getEntries(selectedFile, { filenameEncoding })
+
+    }
+    document.querySelector('#input-btn').setAttribute("accept", ".zip,.rar,.7zip")
+
 	document.querySelector('canvas').style.display = "none";
     
     sel = createSelect();
@@ -232,26 +247,45 @@ const carregaImagem = (data) => {
 }
 
 function handleFile(file) {
-    if(file.type === 'image') {
-        nome = file.name.split('-')
-        type = nome[nome.length-1].split('.')[0]
-
-        if(type == "raw") {
-            img = createImg(file.data, '');
+    entries.forEach( async  (entry, entryIndex) => {
+        if (entry.filename.includes('raw')) {
+            img = createImg(await model.getURL(entry, {}), '')
             img.id("img-raw")
             var fragment = document.createDocumentFragment()
             fragment.appendChild(document.querySelector('#img-raw'))
             document.querySelector('#raw-download-image').appendChild(fragment)
-        }
-        else {
-            carregaImagem(file.data).then((img) => {
-                if(type == "red")   sourceR   = img
-                if(type == "green") sourceG   = img
-                if(type == "blue")  sourceB   = img
+
+        } else {
+            carregaImagem(await model.getURL(entry, {})).then((img) => {
+                if(entry.filename.includes('red'))   sourceR   = img
+                if(entry.filename.includes('green')) sourceG   = img
+                if(entry.filename.includes('blue'))  sourceB   = img
             })
         }
-    }
+    })
 }
+
+// function handleFile(file) {
+//     if(file.type === 'image') {
+//         nome = file.name.split('-')
+//         type = nome[nome.length-1].split('.')[0]
+
+//         if(type == "raw") {
+//             img = createImg(file.data, '');
+//             img.id("img-raw")
+//             var fragment = document.createDocumentFragment()
+//             fragment.appendChild(document.querySelector('#img-raw'))
+//             document.querySelector('#raw-download-image').appendChild(fragment)
+//         }
+//         else {
+//             carregaImagem(file.data).then((img) => {
+//                 if(type == "red")   sourceR   = img
+//                 if(type == "green") sourceG   = img
+//                 if(type == "blue")  sourceB   = img
+//             })
+//         }
+//     }
+// }
 
 function montaRGB(sR, sG, sB) {
     if(sR.width == 1 || sG.width == 1 || sB.width == 1) return null;
